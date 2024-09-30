@@ -78,6 +78,3 @@ def decrypt_password(input_ciphertext: bytes, nonce: bytes, tag: bytes, key: byt
         return plaintext.decode('utf-8')
     except ValueError as v:
         raise TagMismatchError()
-    
-if __name__ == "__main__":
-    store_key()

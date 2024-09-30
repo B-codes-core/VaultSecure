@@ -1,6 +1,6 @@
 import bcrypt
 
-def get_hashed_password(password):
+def get_hashed_password(password: str) -> bytes:
     """
     Generates a bcrypt hash of the given password.
 
@@ -13,13 +13,13 @@ def get_hashed_password(password):
     hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
     return hashed_password
 
-def verify_password(provided_password, stored_password):
+def verify_password(provided_password: str, stored_password: bytes) -> bool:
     """
     Verifies the provided input password against the hash of a stored password.
 
     Args:
         provided_password (string) : The input password that needs to be verified.
-        stored_password (bytes)
+        stored_password (bytes) : The password that is stored in the database
 
     Returns:
         boolean : Whether the verification succeeded or failed

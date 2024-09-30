@@ -2,6 +2,12 @@ import secrets
 from Crypto.Cipher import AES
 
 class TagMismatchError(Exception):
+    """
+    A custom exception raised when GCM tag authentication fails during decryption
+
+    Attributes:
+        msg (str) : The error message
+    """
     def __init__(self, msg="Decryption Failed due to tag mismatch"):
         super().__init__(msg)
         self.msg = msg

@@ -1,5 +1,8 @@
 import secrets
 from Crypto.Cipher import AES
+from dotenv import load_dotenv, set_key
+import os
+import base64
 
 class TagMismatchError(Exception):
     """
@@ -23,6 +26,19 @@ def generate_key() -> bytes:
     Returns : A cryptographically secure AES-256 key 
     """
     return secrets.token_bytes(32)
+
+def store_key():
+    """
+    Generates and stores an encryption key into a .env file
+
+    Args : None
+    Returns : None
+    """
+    try:
+        encryption_key = generate_key()
+        set_key(".env", "ENCRYPTION_KEY", base64.b64encode(encryption_key).decode())
+    except Exception as exc:
+        print(exc)
 
 def encrypt_password(input_password: str, key: bytes) -> tuple:
     """
@@ -61,4 +77,7 @@ def decrypt_password(input_ciphertext: bytes, nonce: bytes, tag: bytes, key: byt
         plaintext = cipher.decrypt_and_verify(input_ciphertext, tag)
         return plaintext.decode('utf-8')
     except ValueError as v:
-        raise TagMismatchError
+        raise TagMismatchError()
+    
+if __name__ == "__main__":
+    store_key()

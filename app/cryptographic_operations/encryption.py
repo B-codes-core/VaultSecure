@@ -1,8 +1,6 @@
 import secrets
 from Crypto.Cipher import AES
-from dotenv import load_dotenv, set_key
-import os
-import base64
+from dotenv import set_key
 
 class TagMismatchError(Exception):
     """
@@ -36,7 +34,7 @@ def store_key():
     """
     try:
         encryption_key = generate_key()
-        set_key(".env", "ENCRYPTION_KEY", base64.b64encode(encryption_key).decode())
+        set_key(".env", "ENCRYPTION_KEY", encryption_key.hex())
     except Exception as exc:
         print(exc)
 

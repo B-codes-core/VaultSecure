@@ -5,8 +5,8 @@ load_dotenv()
 
 class Config:
     #SECRET_KEY = os.getenv('SECRET_KEY')
-    MYSQL_HOST = os.getenv('MYSQL_HOST', 'localhost')
-    MYSQL_USER = os.getenv('MYSQL_USER')
-    MYSQL_PASSWORD = os.getenv('MYSQL_PASSWORD')
-    MYSQL_DB = os.getenv('MYSQL_DB')
-    MYSQL_PORT = int(os.getenv('MYSQL_PORT', 3306))
+    MONGO_HOST = os.getenv('MONGO_HOST', 'localhost')
+    MONGO_USER = os.getenv('MONGO_USER')
+    MONGO_PASSWORD = os.getenv('MONGO_PASSWORD')
+    MONGO_DB = os.getenv('MONGO_DB')
+    MONGO_PORT = int(os.getenv('MONGO_PORT', 27017))

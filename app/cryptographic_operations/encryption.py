@@ -25,7 +25,7 @@ def generate_key() -> bytes:
     """
     return secrets.token_bytes(32)
 
-def store_key():
+def store_key() -> None:
     """
     Generates and stores an encryption key into a .env file
 

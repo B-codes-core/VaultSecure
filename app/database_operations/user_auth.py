@@ -1,7 +1,5 @@
-from dotenv import load_dotenv
-import pymongo
-import os
 from cryptographic_operations import hashing
+from connect import Connection
 
 class UsernameNotAvailableError(Exception):
     """
@@ -61,40 +59,28 @@ class User:
 
 class UserAuth:
     """
-    Handles user authentication and database operations using MongoDB.
+    A class used to manage user authentication, including registration, login, 
+    and checking username availability in the database.
+
+    This class provides methods to:
+    - Check if a username is available for registration.
+    - Add a new user to the database.
+    - Check if a username exists in the database.
+    - Verify user login credentials.
     
-    Class attributes:
-        MONGO_HOST (str): The MongoDB host, retrieved from environment variables.
-        MONGO_USER (str): The MongoDB user, retrieved from environment variables.
-        MONGO_PASSWORD (str): The MongoDB password, retrieved from environment variables.
-        MONGO_DB (str): The MongoDB database, retrieved from environment variables.
-        MONGO_PORT (int): The MongoDB port, retrieved from environment variables (default: 27017).
+    Attributes:
+        collection (MongoDB Collection): The database collection where user data is stored.
     """
-    MONGO_HOST = os.getenv('MONGO_HOST', 'localhost')
-    MONGO_USER = os.getenv('MONGO_USER')
-    MONGO_PASSWORD = os.getenv('MONGO_PASSWORD')
-    MONGO_DB = os.getenv('MONGO_DB')
-    MONGO_PORT = int(os.getenv('MONGO_PORT', 27017))
 
-    def connect(self) -> bool:
+    def __init__(self, user_auth_collection):
         """
-        Establishes a connection to the MongoDB database using credentials from environment variables.
-        
-        Returns:
-            bool: True if connection was successful, False otherwise.
+        Initializes a pymongo collection object for user_auth collection
+
+        Args:
+            user_auth_collection : The collection object for user_auth collection
         """
-        try:
-            connection_string = f"mongodb://{self.MONGO_USER}:{self.MONGO_PASSWORD}@{self.MONGO_HOST}:{self.MONGO_PORT}/{self.MONGO_DB}"
-            self.client = pymongo.MongoClient(connection_string)
-            self.db = self.client[self.MONGO_DB]
-            self.collection = self.db["user_auth"]
-            return True
+        self.collection = user_auth_collection
 
-        except Exception as e:
-            print("Exception occurred while trying to connect to MongoDB : ",e)
-            return False
-
-    # Do Everything like the below 2 functions
     def check_username_availability(self, username: str) -> None:
         """
         Checks if a username is available in the database.

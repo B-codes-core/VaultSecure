@@ -9,9 +9,6 @@ MONGO_PASSWORD = os.getenv('MONGO_PASSWORD')
 MONGO_DB = os.getenv('MONGO_DB')
 MONGO_PORT = int(os.getenv('MONGO_PORT', 27017))
 
-# TODO : Sort out the connection mess. Figure out how to get collection for both programs from same instance
-# Maybe use Connection object in app, and pass the collection to constructor of both other classes. 
-
 class Connection:
 
     def connect(self):

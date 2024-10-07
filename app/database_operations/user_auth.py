@@ -1,5 +1,6 @@
-from cryptographic_operations import hashing
+from cryptographic_operations import hashing, encryption
 from connect import Connection
+import os
 
 class UsernameNotAvailableError(Exception):
     """
@@ -51,11 +52,13 @@ class User:
         username (str): The username of the user.
         email (str): The email of the user.
         password (str): The hashed password of the user.
+        key_salt (str) : Salt which will be used to generate the encryption key for the user (in hex)
     """
     def __init__(self, username: str, email: str, password: str) -> None:
         self.username = username
         self.email = email
         self.password = hashing.get_hashed_password(password).decode('utf-8')
+        self.key_salt = os.urandom(16).hex()
 
 class UserAuth:
     """
@@ -111,7 +114,8 @@ class UserAuth:
         new_entry = {
             'username' : f'{user_instance.username}',
             'email' : f'{user_instance.email}',
-            'password' : f'{user_instance.password}'
+            'password' : f'{user_instance.password}',
+            'key_salt' : f'{user_instance.key_salt}'
         }
         
         # Change try except ig, let user handle it?
@@ -145,11 +149,24 @@ class UserAuth:
             username (str): The username of the user trying to log in.
             password (str): The plain-text password input by the user.
 
+        Returns:
+            bytes : The generated encryption key of the user
+
         Raises:
             UserNotFoundError: If the username does not exist in the database.
             PasswordVerificationFailedError: If the provided password does not match the stored password.
         """
         self.check_username_exists(username)
-        stored_password = self.collection.find_one({'username': f"{username}"}, {'_id': 0, 'password': 1})['password']
+        query_result = self.collection.find_one({'username': f"{username}"}, {'_id': 0, 'password': 1, 'key_salt': 1})
+        print(query_result)
+        stored_password = query_result["password"]
+        key_salt = query_result["key_salt"]
         if not hashing.verify_password(password, stored_password.encode('utf-8')):
             raise PasswordVerificationFailedError()
+        return encryption.generate_key(password, key_salt)
+        
+c = Connection()
+c.connect()
+u = UserAuth(c.get_user_auth_collection())
+# u.add_user(User("admin","admin@gmail.com","adminpassword"))
+key = u.verify_user_login("test", "testpassword")

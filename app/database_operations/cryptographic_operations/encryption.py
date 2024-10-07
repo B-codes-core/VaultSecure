@@ -1,6 +1,7 @@
 import secrets
 from Crypto.Cipher import AES
-from dotenv import set_key
+from Crypto.Protocol.KDF import PBKDF2
+from Crypto.Hash import SHA256
 
 class TagMismatchError(Exception):
     """
@@ -16,27 +17,19 @@ class TagMismatchError(Exception):
     def __str__(self):
         return self.msg
 
-def generate_key() -> bytes:
+def generate_key(password: str, salt: str, key_length: int = 32, iterations: int = 100000) -> bytes:
     """
-    Generates a cryptographically secure AES-256 key
+    Generates a cryptographically secure AES-256 key using PBKDF2 Key Derivation function
 
-    Args : None
-    Returns : A cryptographically secure AES-256 key 
-    """
-    return secrets.token_bytes(32)
+    Args :
+        password (str) : The password of the user, using which the key will be derived.
+        salt (str) : The salt that is used to generate the key. It is in hex
 
-def store_key() -> None:
+    Returns : 
+        bytes : A cryptographically secure AES-256 key 
     """
-    Generates and stores an encryption key into a .env file
-
-    Args : None
-    Returns : None
-    """
-    try:
-        encryption_key = generate_key()
-        set_key(".env", "ENCRYPTION_KEY", encryption_key.hex())
-    except Exception as exc:
-        print(exc)
+    key = PBKDF2(password, bytes.fromhex(salt), dkLen=key_length, count=iterations, hmac_hash_module=SHA256)
+    return key
 
 def encrypt_password(input_password: str, key: bytes) -> tuple:
     """

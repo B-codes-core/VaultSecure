@@ -1,6 +1,7 @@
 from cryptographic_operations import hashing, encryption
 import os
 from dotenv import set_key
+from connect import Connection
 
 class UsernameNotAvailableError(Exception):
     """
@@ -158,9 +159,8 @@ class UserAuth:
         """
         self.check_username_exists(username)
         query_result = self.collection.find_one({'username': f"{username}"}, {'_id': 0, 'password': 1, 'key_salt': 1})
-        print(query_result)
         stored_password = query_result["password"]
         key_salt = query_result["key_salt"]
         if not hashing.verify_password(password, stored_password.encode('utf-8')):
             raise PasswordVerificationFailedError()
-        set_key("..\\..\\.env", "ENCRYPTION_KEY", encryption.generate_key(password, key_salt))
+        set_key(".env", "ENCRYPTION_KEY", encryption.generate_key(password, key_salt).hex())

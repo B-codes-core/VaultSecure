@@ -164,9 +164,3 @@ class UserAuth:
         if not hashing.verify_password(password, stored_password.encode('utf-8')):
             raise PasswordVerificationFailedError()
         return encryption.generate_key(password, key_salt)
-        
-c = Connection()
-c.connect()
-u = UserAuth(c.get_user_auth_collection())
-# u.add_user(User("admin","admin@gmail.com","adminpassword"))
-key = u.verify_user_login("test", "testpassword")

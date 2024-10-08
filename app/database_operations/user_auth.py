@@ -1,6 +1,6 @@
 from cryptographic_operations import hashing, encryption
-from connect import Connection
 import os
+from dotenv import set_key
 
 class UsernameNotAvailableError(Exception):
     """
@@ -163,4 +163,4 @@ class UserAuth:
         key_salt = query_result["key_salt"]
         if not hashing.verify_password(password, stored_password.encode('utf-8')):
             raise PasswordVerificationFailedError()
-        return encryption.generate_key(password, key_salt)
+        set_key("..\\..\\.env", "ENCRYPTION_KEY", encryption.generate_key(password, key_salt))

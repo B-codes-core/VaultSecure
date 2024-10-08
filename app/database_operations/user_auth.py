@@ -1,7 +1,6 @@
 from cryptographic_operations import hashing, encryption
 import os
 from dotenv import set_key
-from connect import Connection
 
 class UsernameNotAvailableError(Exception):
     """

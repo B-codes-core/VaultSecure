@@ -1,6 +1,7 @@
 from cryptographic_operations import hashing, encryption
 import os
 from dotenv import set_key
+import pymongo
 
 class UsernameNotAvailableError(Exception):
     """
@@ -75,7 +76,7 @@ class UserAuth:
         collection (MongoDB Collection): The database collection where user data is stored.
     """
 
-    def __init__(self, user_auth_collection):
+    def __init__(self, user_auth_collection: pymongo.synchronous.collection.Collection):
         """
         Initializes a pymongo collection object for user_auth collection
 
@@ -115,7 +116,8 @@ class UserAuth:
             'username' : f'{user_instance.username}',
             'email' : f'{user_instance.email}',
             'password' : f'{user_instance.password}',
-            'key_salt' : f'{user_instance.key_salt}'
+            'key_salt' : f'{user_instance.key_salt}',
+            'user_passwords' : []
         }
         
         # Change try except ig, let user handle it?

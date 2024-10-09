@@ -40,12 +40,12 @@ def encrypt_password(input_password: str, key: bytes) -> tuple:
         key (bytes) : The AES-256 encryption key
 
     Returns:
-        tuple : nonce, ciphertext and tag in the order meentioned
+        tuple : ciphertext, nonce and tag in the order meentioned
     """
     nonce = secrets.token_bytes(12)
     cipher = AES.new(key, AES.MODE_GCM, nonce=nonce)
     ciphertext, tag = cipher.encrypt_and_digest(input_password.encode('utf-8'))
-    return nonce, ciphertext, tag
+    return ciphertext, nonce, tag
 
 def decrypt_password(input_ciphertext: bytes, nonce: bytes, tag: bytes, key: bytes) -> str:
     """

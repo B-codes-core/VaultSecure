@@ -1,3 +1,4 @@
+from bson import ObjectId
 from .cryptographic_operations import hashing, encryption
 import os
 from dotenv import set_key
@@ -142,6 +143,13 @@ class UserAuth:
         result = self.collection.find_one(query)
         if result is None:
             raise UserNotFoundError()
+        
+    def get_user_by_id(self, user_id):
+        query_result = self.collection.find_one({'_id': ObjectId(user_id)}, {'_id': 1, 'username': 1})
+        if query_result:
+            return {'_id': query_result['_id'], 'username': query_result['username']}
+        return None
+
     
     # def verify_user_login(self, username: str, password: str) -> None:
     #     """
@@ -171,7 +179,7 @@ class UserAuth:
     def verify_user_login(self, username: str, password: str):
         try:
             self.check_username_exists(username)
-            query_result = self.collection.find_one({'username': username}, {'_id': 0, 'password': 1, 'key_salt': 1})
+            query_result = self.collection.find_one({'username': username}, {'_id': 1, 'password': 1, 'key_salt': 1})
 
             if query_result is None:
                 print(f"User '{username}' not found.")
@@ -179,7 +187,9 @@ class UserAuth:
 
             stored_password = query_result["password"]
             key_salt = query_result["key_salt"]
-            print(f"Stored password: {stored_password}, Key salt: {key_salt}")  # Debugging output
+            user_id = query_result['_id']  # Assuming '_id' is your user ID
+
+            print(f"Stored password: {stored_password}, Key salt: {key_salt}, User ID: {user_id}")  # Debugging output
 
             if not hashing.verify_password(password, stored_password.encode('utf-8')):
                 print("Password verification failed.")
@@ -187,12 +197,13 @@ class UserAuth:
 
             # Successful verification: generate and return the encryption key
             encryption_key = encryption.generate_key(password, key_salt).hex()
-            set_key("app/database_operations/.env", "ENCRYPTION_KEY", encryption_key)
+            set_key("database_operations/.env", "ENCRYPTION_KEY", encryption_key)
 
-            # Return user information (you can adjust this based on your requirements)
-            return {'username': username, 'encryption_key': encryption_key}
+            # Return user information, including user ID
+            return {'id': user_id, 'username': username, 'encryption_key': encryption_key}  # Include user ID
         
         except Exception as e:
             print(f"An unexpected error occurred: {e}")
             raise
+
 

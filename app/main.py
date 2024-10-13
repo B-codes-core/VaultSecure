@@ -135,11 +135,14 @@ class User(UserMixin):
 
     @staticmethod
     def get(user_id):
-        """Fetch user by ID from your database."""
-        user = user_auth.get_user_by_id(user_id)
-        if user:
-            return User(id=user['id'], username=user['username'])
-        return None
+        user = u.get_user_by_id(user_id)  # Replace with your actual data source
+        if user is None:
+            print(f"No user found with ID: {user_id}")
+            return None  # Or handle this case as appropriate
+
+        print(f"Retrieved user data: {user}")  # Inspect the returned user data
+        return User(id=user.get('id'), username=user.get('username', 'Unknown'))
+
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -190,8 +193,6 @@ def login():
         try:
             print(f"Verified username: {username}")
             user = u.verify_user_login(username, password)
-            print(user['id'])
-            
             login_user(User(id=user['id'], username=user['username']))  # Log in the user
             return redirect(url_for('dashboard'))
         except PasswordVerificationFailedError:
@@ -222,8 +223,7 @@ def register():
 
         try:
             print("addbefore")
-            u1 = UserAuth(c.get_collection())
-            u1.add_user(User(username, email, password))
+            u.add_user(User(username, email, password))
             print("add")
             flash('Registration successful. You can now log in.', 'success')
             return redirect(url_for('login'))

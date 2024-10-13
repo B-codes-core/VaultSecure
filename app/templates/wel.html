@@ -1,84 +1,3 @@
-<!--<!doctype html>-->
-<!--<html lang="en">-->
-
-<!--<head>-->
-<!--    <meta charset="UTF-8">-->
-<!--    <title>Registration Form</title>-->
-<!--    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet" />-->
-<!--</head>-->
-
-<!--<body>-->
-
-<!--      <section> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>-->
-
-<!--        &lt;!&ndash; Additional span elements omitted for brevity &ndash;&gt;-->
-
-
-<!--        <div class="signin">-->
-<!--            <div class="content">-->
-<!--                <h2>Sign Up</h2>-->
-
-<!--                <div class="form">-->
-<!--                    <form action="{{ url_for('register') }}" method="POST">-->
-<!--                        <div class="inputBox">-->
-<!--                            <input name="username" type="text" required>-->
-<!--                            <i>Username</i>-->
-<!--                        </div>-->
-
-<!--                        <div class="inputBox">-->
-<!--                            <input name="password" type="password" required>-->
-<!--                            <i>Password</i>-->
-<!--                        </div>-->
-
-
-<!--                         <div class="inputBox">-->
-<!--                            <input name="email" type="email" required>-->
-<!--                            <i>Email</i>-->
-<!--                        </div>-->
-
-<!--                        <form action="{{ url_for('register') }}" method="POST">-->
-<!--                            <div class="inputBox">-->
-<!--                            <input type="submit" value="Get otp">-->
-<!--                        </div>-->
-<!--                        </form>-->
-
-
-<!--                        <div class="inputBox">-->
-<!--                            <input name="otp" type="text" required maxlength="4" pattern="\d{4}">-->
-<!--                            <i>Enter 4-Digit OTP</i>-->
-<!--                        </div>-->
-
-<!--                        <div class="links">-->
-<!--                            <a href="#" id="forgotPassword">Forgot Password?</a>-->
-<!--                            <a href="{{ url_for('gg') }}" id="switchToLogin">Already have an account? Login</a>-->
-<!--                        </div>-->
-
-<!--                        <div class="inputBox">-->
-<!--                            <input type="submit" value="Register">-->
-<!--                        </div>-->
-
-<!--                    </form>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </section>-->
-
-<!--    <script>-->
-<!--        // JavaScript to switch between login and registration forms-->
-<!--        document.getElementById('switchToLogin').addEventListener('click', function() {-->
-<!--            document.querySelector('.content h2').innerText = 'Sign In';-->
-<!--            document.querySelector('.inputBox input[name="username"]').name = 'usn';-->
-<!--            document.querySelector('.inputBox input[name="password"]').name = 'password';-->
-<!--            document.querySelector('.inputBox input[name="otp"]').remove();-->
-<!--            this.parentElement.style.display = 'none'; // Hide this link-->
-<!--        });-->
-
-<!--        // Additional JavaScript can be added here for forgot password functionality if needed-->
-<!--    </script>-->
-<!--</body>-->
-<!--</html>-->
-
-
 
 
 
@@ -142,7 +61,7 @@
     <!-- Navigation Bar -->
     <nav>
         <ul>
-            <li><a href="{{ url_for('h') }}">Home</a></li>
+            <li><a href="{{ url_for('home') }}">Home</a></li>
             <!-- Add more links if needed -->
         </ul>
     </nav>
@@ -157,7 +76,7 @@
 
                 <div class="form">
                     <!-- Form to Request OTP -->
-                    <form id="otpForm" action="{{ url_for('request_otp') }}" method="POST">
+                    <form id="otpForm" action="{{ url_for('home') }}" method="POST">
                         <div class="inputBox">
                             <input name="email" type="email" required>
                             <i>Email</i>
@@ -188,7 +107,7 @@
 
                         <div class="links">
                             <a href="#" id="forgotPassword">Forgot Password?</a>
-                            <a href="{{ url_for('gg') }}" id="switchToLogin">Already have an account? Login</a>
+                            <a href="{{ url_for('login') }}" >Already have an account? Login</a>
                         </div>
 
                         <div class="inputBox">

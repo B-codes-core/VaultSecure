@@ -1,9 +1,3 @@
-
-
-
-
-
-
 <!doctype html>
 <html lang="en">
 
@@ -12,8 +6,6 @@
     <title>Registration Form</title>
     <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet" />
     <style>
-        /* Add your CSS here or in style.css */
-        /* Example: */
         nav {
             background-color: #333;
             overflow: hidden;
@@ -49,10 +41,8 @@
         }
 
         section {
-            padding-top: 60px; /* Adjust based on navbar height */
+            padding-top: 60px;
         }
-
-        /* Additional styles as needed */
     </style>
 </head>
 
@@ -62,35 +52,26 @@
     <nav>
         <ul>
             <li><a href="{{ url_for('home') }}">Home</a></li>
-            <!-- Add more links if needed -->
         </ul>
     </nav>
 
-   <section> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
-
-        <!-- ... (additional spans omitted for brevity) -->
-
+    <section>
         <div class="signin">
             <div class="content">
                 <h2>Sign Up</h2>
 
                 <div class="form">
-                    <!-- Form to Request OTP -->
-                    <form id="otpForm" action="{{ url_for('home') }}" method="POST">
-                        <div class="inputBox">
-                            <input name="email" type="email" required>
-                            <i>Email</i>
-                        </div>
-                        <div class="inputBox">
-                            <input type="submit" value="Get OTP">
-                        </div>
-                    </form>
-
                     <!-- Form to Register -->
                     <form id="registerForm" action="{{ url_for('register') }}" method="POST">
+                        {{ form.hidden_tag() }}  
                         <div class="inputBox">
                             <input name="username" type="text" required>
                             <i>Username</i>
+                        </div>
+
+                        <div class="inputBox">
+                            <input name="email" type="email" required>
+                            <i>Email</i>
                         </div>
 
                         <div class="inputBox">
@@ -98,20 +79,13 @@
                             <i>Password</i>
                         </div>
 
-
-
-                        <div class="inputBox">
-                            <input name="otp" type="text" required maxlength="6" pattern="\d{6}">
-                            <i>Enter 6-Digit OTP</i>
-                        </div>
-
                         <div class="links">
                             <a href="#" id="forgotPassword">Forgot Password?</a>
-                            <a href="{{ url_for('login') }}" >Already have an account? Login</a>
+                            <a href="{{ url_for('login') }}">Already have an account? Login</a>
                         </div>
 
                         <div class="inputBox">
-                            <input type="submit" value="Register">
+                            <input type="submit" name="submit" value="Register">
                         </div>
                     </form>
                 </div>
@@ -120,14 +94,6 @@
     </section>
 
     <script>
-        // JavaScript to switch between login and registration forms
-        document.getElementById('switchToLogin').addEventListener('click', function(event) {
-            event.preventDefault(); // Prevent default link behavior
-            document.querySelector('.content h2').innerText = 'Sign In';
-            // Implement the switch to login functionality as needed
-            // For example, redirect to login page or display login form
-        });
-
         // Optional: JavaScript to handle form visibility or additional features
     </script>
 </body>

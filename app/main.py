@@ -105,12 +105,15 @@
 
 
 
-from flask import Flask, render_template, redirect, url_for, flash
+from flask import Flask, render_template, redirect, request, url_for, flash
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField
+from wtforms import StringField, PasswordField, SubmitField,EmailField
 from wtforms.validators import DataRequired, Length, EqualTo
 from database_operations import user_auth
 from flask_login import UserMixin, LoginManager, login_user, login_required, current_user, logout_user
+from database_operations import connect
+from database_operations.user_auth import User, UserAuth,PasswordVerificationFailedError,UserNotFoundError
+from wtforms.validators import DataRequired, Email, URL
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your_secret_key'
@@ -118,6 +121,11 @@ app.config['SECRET_KEY'] = 'your_secret_key'
 # Flask-Login setup
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'  # Redirect users to login page if not authenticated
+
+
+c=connect.Connection()
+c.connect()
+u = UserAuth(c.get_collection())
 
 # User model for Flask-Login
 class User(UserMixin):
@@ -140,51 +148,97 @@ def load_user(user_id):
 
 # Forms
 class LoginForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired(), Length(min=4, max=25)])
-    password = PasswordField('Password', validators=[DataRequired(), Length(min=8)])
+    username = StringField('Username', validators=[DataRequired()])
+    password = PasswordField('Password', validators=[DataRequired()])
     submit = SubmitField('Login')
 
 class RegisterForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(min=4, max=25)])
+    email=EmailField('Email',validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired(), Length(min=8)])
-    confirm_password = PasswordField('Confirm Password', validators=[
-        DataRequired(), EqualTo('password', message='Passwords must match')])
     submit = SubmitField('Register')
+
+class UserForm(FlaskForm):
+    username = StringField('Username', validators=[DataRequired()])
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    website = StringField('Website', validators=[URL()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    submit = SubmitField('Submit')
 
 # Routes
 @app.route('/')
 def home():
     return render_template('about.html')
 
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    print("Route triggered")
     form = LoginForm()
+    
+    if request.method == 'POST':
+        print("Form data received")
+        
     if form.validate_on_submit():
+        print("Form validated")
         username = form.username.data
         password = form.password.data
+        
+        # Debugging
+        print(f"Username: {username}, Password: {password}")
+
         try:
-            user = user_auth.verify_login(username, password)
+            print(f"Verified username: {username}")
+            user = u.verify_user_login(username, password)
+            print(user['id'])
+            
             login_user(User(id=user['id'], username=user['username']))  # Log in the user
             return redirect(url_for('dashboard'))
-        except user_auth.PasswordVerificationError:
+        except PasswordVerificationFailedError:
             flash('Invalid password. Please try again.', 'danger')
-        except user_auth.UserNotFoundError:
+        except UserNotFoundError:
             flash('Username not found. Please register or try again.', 'danger')
+    else:
+        if request.method == 'POST':
+            print("Form validation failed")
+        
     return render_template('indexl.html', form=form)
+
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegisterForm()
+    print("hi")
+    if request.method == 'POST':
+        print("Form data received")
+        
+
     if form.validate_on_submit():
+        print("bye")
         username = form.username.data
+        email = form.email.data
         password = form.password.data
+        print(username)
+
         try:
-            user_auth.add_user(username, password)
+            print("addbefore")
+            u1 = UserAuth(c.get_collection())
+            u1.add_user(User(username, email, password))
+            print("add")
             flash('Registration successful. You can now log in.', 'success')
             return redirect(url_for('login'))
         except user_auth.UsernameNotAvailableError:
             flash('Username is already taken. Please choose a different one.', 'danger')
+        except Exception as e:
+            flash(f'An error occurred during registration: {e}', 'danger')
+
+    else:
+        # Print errors if form validation fails
+        print(f'Form errors: {form.errors}')  # Add this line to log form errors
+
     return render_template('wel.html', form=form)
+
+
 
 @app.route('/dashboard')
 @login_required  # User must be logged in to access this route

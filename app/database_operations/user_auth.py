@@ -143,25 +143,56 @@ class UserAuth:
         if result is None:
             raise UserNotFoundError()
     
-    def verify_user_login(self, username: str, password: str) -> None:
-        """
-        Verifies the login credentials (username and password) of the user.
+    # def verify_user_login(self, username: str, password: str) -> None:
+    #     """
+    #     Verifies the login credentials (username and password) of the user.
 
-        Args:
-            username (str): The username of the user trying to log in.
-            password (str): The plain-text password input by the user.
+    #     Args:
+    #         username (str): The username of the user trying to log in.
+    #         password (str): The plain-text password input by the user.
 
-        Returns:
-            bytes : The generated encryption key of the user
+    #     Returns:
+    #         bytes : The generated encryption key of the user
 
-        Raises:
-            UserNotFoundError: If the username does not exist in the database.
-            PasswordVerificationFailedError: If the provided password does not match the stored password.
-        """
-        self.check_username_exists(username)
-        query_result = self.collection.find_one({'username': f"{username}"}, {'_id': 0, 'password': 1, 'key_salt': 1})
-        stored_password = query_result["password"]
-        key_salt = query_result["key_salt"]
-        if not hashing.verify_password(password, stored_password.encode('utf-8')):
-            raise PasswordVerificationFailedError()
-        set_key("app/database_operations/.env", "ENCRYPTION_KEY", encryption.generate_key(password, key_salt).hex())
+    #     Raises:
+    #         UserNotFoundError: If the username does not exist in the database.
+    #         PasswordVerificationFailedError: If the provided password does not match the stored password.
+    #     """
+    #     self.check_username_exists(username)
+    #     query_result = self.collection.find_one({'username': f"{username}"}, {'_id': 0, 'password': 1, 'key_salt': 1})
+    #     stored_password = query_result["password"]
+    #     key_salt = query_result["key_salt"]
+    #     if not hashing.verify_password(password, stored_password.encode('utf-8')):
+    #         raise PasswordVerificationFailedError()
+    #     set_key("app/database_operations/.env", "ENCRYPTION_KEY", encryption.generate_key(password, key_salt).hex())
+
+
+
+    def verify_user_login(self, username: str, password: str):
+        try:
+            self.check_username_exists(username)
+            query_result = self.collection.find_one({'username': username}, {'_id': 0, 'password': 1, 'key_salt': 1})
+
+            if query_result is None:
+                print(f"User '{username}' not found.")
+                raise UserNotFoundError("User not found.")
+
+            stored_password = query_result["password"]
+            key_salt = query_result["key_salt"]
+            print(f"Stored password: {stored_password}, Key salt: {key_salt}")  # Debugging output
+
+            if not hashing.verify_password(password, stored_password.encode('utf-8')):
+                print("Password verification failed.")
+                raise PasswordVerificationFailedError()
+
+            # Successful verification: generate and return the encryption key
+            encryption_key = encryption.generate_key(password, key_salt).hex()
+            set_key("app/database_operations/.env", "ENCRYPTION_KEY", encryption_key)
+
+            # Return user information (you can adjust this based on your requirements)
+            return {'username': username, 'encryption_key': encryption_key}
+        
+        except Exception as e:
+            print(f"An unexpected error occurred: {e}")
+            raise
+

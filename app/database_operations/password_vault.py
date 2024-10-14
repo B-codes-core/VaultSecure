@@ -1,4 +1,4 @@
-from cryptographic_operations import encryption
+from .cryptographic_operations import encryption
 from dotenv import load_dotenv, set_key
 import os
 import pymongo

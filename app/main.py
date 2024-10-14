@@ -114,6 +114,8 @@ from flask_login import UserMixin, LoginManager, login_user, login_required, cur
 from database_operations import connect
 from database_operations.user_auth import User, UserAuth,PasswordVerificationFailedError,UserNotFoundError
 from wtforms.validators import DataRequired, Email, URL
+from database_operations.password_vault import PasswordVault, Password
+
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your_secret_key'
@@ -128,7 +130,7 @@ c.connect()
 u = UserAuth(c.get_collection())
 
 # User model for Flask-Login
-class User(UserMixin):
+class LoginUser(UserMixin):
     def __init__(self, id, username):
         self.id = id
         self.username = username
@@ -141,13 +143,13 @@ class User(UserMixin):
             return None  # Or handle this case as appropriate
 
         print(f"Retrieved user data: {user}")  # Inspect the returned user data
-        return User(id=user.get('id'), username=user.get('username', 'Unknown'))
+        return LoginUser(id=user.get('id'), username=user.get('username', 'Unknown'))
 
 
 @login_manager.user_loader
 def load_user(user_id):
     """Loads user from the session using user ID."""
-    return User.get(user_id)
+    return LoginUser.get(user_id)
 
 # Forms
 class LoginForm(FlaskForm):
@@ -164,7 +166,7 @@ class RegisterForm(FlaskForm):
 class UserForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired(), Email()])
-    website = StringField('Website', validators=[URL()])
+    website = StringField('Website', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
     submit = SubmitField('Submit')
 
@@ -193,7 +195,7 @@ def login():
         try:
             print(f"Verified username: {username}")
             user = u.verify_user_login(username, password)
-            login_user(User(id=user['id'], username=user['username']))  # Log in the user
+            login_user(LoginUser(id=user['id'], username=user['username']))  # Log in the user
             return redirect(url_for('dashboard'))
         except PasswordVerificationFailedError:
             flash('Invalid password. Please try again.', 'danger')
@@ -222,7 +224,6 @@ def register():
         print(username)
 
         try:
-            print("addbefore")
             u.add_user(User(username, email, password))
             print("add")
             flash('Registration successful. You can now log in.', 'success')
@@ -243,7 +244,7 @@ def register():
 @app.route('/dashboard')
 @login_required  # User must be logged in to access this route
 def dashboard():
-    return render_template('index.html', username=current_user.username)
+    return render_template('password.html', username=current_user.username)
 
 @app.route('/logout')
 @login_required
@@ -254,19 +255,24 @@ def logout():
 
 
 
-@app.route("/create-p", methods=['GET', 'POST'])
+@app.route("/create-password", methods=['GET', 'POST'])
 @login_required
 def create_p():
     form = UserForm()
+    if request.method == 'POST':
+        print("Form data received")
+
     if form.validate_on_submit():
         username = form.username.data
         email = form.email.data
         website = form.website.data
-        password = form.password.data
+        password1 = form.password.data
         # Implement password creation logic here (e.g., save to database)
-        print(f'Username: {username}, Email: {email}, Website: {website}, Password: {password}')
+        print(f'Username: {username}, Email: {email}, Website: {website}, Password: {password1}')
+        p=PasswordVault(c.get_collection())
+        p.add_password(current_user.username,Password(username,website,password1)) 
         flash('Password entry created successfully.', 'success')
-        return redirect(url_for('rii', name=username))
+        return redirect(url_for('dashboard'))
     return render_template('add_password.html', form=form)
 
 

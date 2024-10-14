@@ -2,7 +2,7 @@ import pymongo
 from dotenv import load_dotenv
 import os
 
-load_dotenv("database_operations/.env")
+load_dotenv("app/database_operations/.env")
 MONGO_HOST = os.getenv('MONGO_HOST', 'localhost')
 MONGO_USER = os.getenv('MONGO_USER')
 MONGO_PASSWORD = os.getenv('MONGO_PASSWORD')

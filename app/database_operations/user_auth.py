@@ -180,30 +180,14 @@ class UserAuth:
         try:
             self.check_username_exists(username)
             query_result = self.collection.find_one({'username': username}, {'_id': 1, 'password': 1, 'key_salt': 1})
-
-            if query_result is None:
-                print(f"User '{username}' not found.")
-                raise UserNotFoundError("User not found.")
-
             stored_password = query_result["password"]
             key_salt = query_result["key_salt"]
-            user_id = query_result['_id']  # Assuming '_id' is your user ID
-
-            print(f"Stored password: {stored_password}, Key salt: {key_salt}, User ID: {user_id}")  # Debugging output
-
+            user_id = query_result['_id']
             if not hashing.verify_password(password, stored_password.encode('utf-8')):
-                print("Password verification failed.")
                 raise PasswordVerificationFailedError()
-
-            # Successful verification: generate and return the encryption key
             encryption_key = encryption.generate_key(password, key_salt).hex()
-            set_key("database_operations/.env", "ENCRYPTION_KEY", encryption_key)
-
-            # Return user information, including user ID
-            return {'id': user_id, 'username': username, 'encryption_key': encryption_key}  # Include user ID
-        
+            set_key("app/database_operations/.env", "ENCRYPTION_KEY", encryption_key)
+            return {'id': user_id, 'username': username}  
         except Exception as e:
             print(f"An unexpected error occurred: {e}")
             raise
-
-

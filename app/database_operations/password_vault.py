@@ -108,10 +108,11 @@ class PasswordVault:
         except Exception as e:
             print("Exception ocurred while retrieving passwords : ", e)
 
+    @classmethod
     def clear_encryption_key(self) -> None:
         """
         Clears the encryption key stored in the .env file when the user logs out.
 
         This method is useful for security purposes, to ensure the key is removed from the environment after usage.
         """
-        set_key(".env", "ENCRYPTION_KEY", "")
+        set_key("app/database_operations/.env", "ENCRYPTION_KEY", "")

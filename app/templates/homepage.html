@@ -66,7 +66,8 @@
                 <div class="collapse navbar-collapse" id="navbarResponsive">
                     <ul class="navbar-nav ms-auto py-4 py-lg-0">
                         <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="{{ url_for('home') }}">Home</a></li>
-<li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="{{ url_for('login') }}">Contact</a></li>
+                        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="{{ url_for('login') }}">Sign In</a></li>
+                        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="{{ url_for('register') }}">Sign Up</a></li>
                          {% if current_user.is_authenticated %}
     <li class="nav-item">
         <a class="nav-link px-lg-3 py-3 py-lg-4" href="{{ url_for('dashboard') }}">Password</a>
@@ -125,7 +126,7 @@
         <div class="person employee">
             <img src="static/assets/img/download.jpeg" alt="Employee">
             <div class="quote">
-                <p>"Being part of the Secure Vault team is amazing. We work every day to ensure your data stays protected."</p>
+                <p>"Being part of the VaultSecure team is amazing. We work every day to ensure your data stays protected."</p>
                 <strong>- Vivekananda</strong>
             </div>
         </div>

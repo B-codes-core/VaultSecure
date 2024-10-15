@@ -8,10 +8,13 @@ from database_operations import connect
 from database_operations.user_auth import User, UserAuth,PasswordVerificationFailedError,UserNotFoundError
 from wtforms.validators import DataRequired, Email
 from database_operations.password_vault import PasswordVault, Password
+from dotenv import load_dotenv
+import os
 
+load_dotenv("app/database_operations/.env")
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'your_secret_key'
+app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
 
 # Flask-Login setup
 login_manager = LoginManager(app)
